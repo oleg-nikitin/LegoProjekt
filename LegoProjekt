@@ -1,0 +1,56 @@
+package firstProject;
+
+
+import java.lang.Math.*;
+import lejos.utility.Delay;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.robotics.RegulatedMotor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.hardware.port.SensorPort;
+import lejos.robotics.SampleProvider;
+
+
+
+public class Sensor {
+
+	
+
+	  static EV3UltrasonicSensor Ultrasonic = new EV3UltrasonicSensor(SensorPort.S3);
+
+
+	public static void main(String[] args) {
+		final SampleProvider sp = Ultrasonic.getDistanceMode();
+		int distanceValue = 0;
+		  RegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.B);
+		    RegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.C);
+
+
+		while(true) {
+
+
+        	float [] sample = new float[sp.sampleSize()];
+            sp.fetchSample(sample, 0);
+            distanceValue = (int)sample[0];
+		    if(distanceValue >= 0.2000000000 && distanceValue != 0 ) {
+		        left.forward();
+		        right.forward();
+		        Delay.msDelay(1000);
+		        left.stop();
+		        right.stop();
+
+		    } else {
+		    	left.backward();
+		        right.backward();
+		        Delay.msDelay(1000);
+		        left.stop();
+		        right.stop();
+		        break;
+
+		    }
+		}
+	    left.close();
+	    right.close();
+		
+	}
+}
